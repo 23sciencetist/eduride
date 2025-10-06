@@ -1,0 +1,286 @@
+<html lang="id"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>EduRide — Prototipe</title>
+  <style>
+    :root{--green:#2eb872;--muted:#f4f6f8;--card:#ffffff;--glass: rgba(255,255,255,0.75);--text:#0f1724}
+    *{box-sizing:border-box}
+    body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin:0; background:linear-gradient(180deg,#eafaf0 0%, #ffffff 100%); color:var(--text)}
+    header{padding:18px 20px; display:flex; align-items:center; gap:12px}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo .badge{width:44px;height:44px;border-radius:10px;background:var(--green);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+    .container{max-width:980px;margin:18px auto;padding:18px}
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:18px}
+    .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 6px 18px rgba(12,20,30,0.06)}
+    h2{margin:0 0 12px 0;font-size:18px}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:var(--green);color:#fff;text-decoration:none;cursor:pointer;border:none}
+    .muted{color:#64748b;font-size:13px}
+
+    label{display:block;font-size:13px;margin-bottom:6px}
+    input[type=text], select, textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef3;background:#fbfeff}
+    .row{display:flex;gap:10px}
+    .row .col{flex:1}
+    .driver-list{display:flex;flex-direction:column;gap:10px}
+    .driver{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;border:1px solid #eef3f7}
+    .avatar{width:54px;height:54px;border-radius:8px;background:#eef9f2;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--green)}
+    .driver .meta{flex:1}
+    .price{font-weight:700}
+    .chat{height:320px;display:flex;flex-direction:column;gap:8px}
+    .messages{flex:1;overflow:auto;padding:10px;border-radius:8px;border:1px dashed #e6eef3;background:linear-gradient(180deg,#ffffff, #fbfffc)}
+    .msg{margin-bottom:8px}
+    .msg.me{text-align:right}
+    footer{margin-top:12px;font-size:13px;color:#475569}
+
+    @media (max-width:920px){.grid{grid-template-columns:1fr}.container{padding:12px}}
+
+    .pill{padding:6px 8px;border-radius:999px;background:#f1fbef;border:1px solid #e6f6e8;font-size:13px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="badge">ER</div>
+      <div>
+        <div style="font-weight:700">EduRide — Prototipe</div>
+        <div class="muted">Demo HTML interaktif | Editable</div>
+      </div>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+      <div class="pill">User: Mahasiswa (demo)</div>
+      <button class="btn" id="downloadBtn">Download HTML</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+      <section class="card">
+        <h2>Pesan Ojek / Delivery</h2>
+        <p class="muted">Isi titik jemput &amp; tujuan. Contoh driver di bawah: Faiq, Nadila, Nuzil.</p>
+
+        <div style="margin-top:12px">
+          <label for="type">Jenis Layanan</label>
+          <select id="type">
+            <option value="ride">Antar-Jemput</option>
+            <option value="delivery">Delivery (Makanan/Dokumen)</option>
+          </select>
+        </div>
+
+        <div style="margin-top:12px" class="row">
+          <div class="col">
+            <label for="pickup">Jemput (lokasi)</label>
+            <input id="pickup" type="text" placeholder="Contoh: Pintu Utama Kampus" value="Pintu Utama">
+          </div>
+          <div class="col">
+            <label for="drop">Tujuan</label>
+            <input id="drop" type="text" placeholder="Contoh: Perpustakaan / Kantin" value="Perpustakaan">
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label for="note">Catatan / Instruksi</label>
+          <textarea id="note" rows="2" placeholder="Misal: bawain sabuk pengaman"></textarea>
+        </div>
+
+        <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+          <button class="btn" id="findDriver">Cari Driver</button>
+          <div class="muted" id="eta">ETA: sekitar 5 menit</div>
+        </div>
+
+        <hr style="margin:14px 0;border:none;border-top:1px solid #eef3f7">
+
+        <h2 style="font-size:16px">Daftar Driver Terdekat</h2>
+        <div class="driver-list" id="drivers"><div class="driver">
+          <div class="avatar">F</div>
+          <div class="meta">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-weight:700">Faiq <span style="font-weight:400;color:#64748b;font-size:13px">(Fakultas Keguruan dan Ilmu Pendidikan)</span></div>
+              <div class="price">Rp 6.000</div>
+            </div>
+            <div class="muted" style="margin-top:6px">Rating: 4.8 • ETA 4 menit</div>
+          </div>
+          <div>
+            <button class="btn" onclick="selectDriver(1)">Pilih</button>
+          </div>
+        </div><div class="driver">
+          <div class="avatar">N</div>
+          <div class="meta">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-weight:700">Nadila <span style="font-weight:400;color:#64748b;font-size:13px">(Fakultas Keguruan dan Ilmu Pendidikan)</span></div>
+              <div class="price">Rp 7.000</div>
+            </div>
+            <div class="muted" style="margin-top:6px">Rating: 4.7 • ETA 6 menit</div>
+          </div>
+          <div>
+            <button class="btn" onclick="selectDriver(2)">Pilih</button>
+          </div>
+        </div><div class="driver">
+          <div class="avatar">N</div>
+          <div class="meta">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-weight:700">Nuzil <span style="font-weight:400;color:#64748b;font-size:13px">(Fakultas Keguruan dan Ilmu Pendidikan)</span></div>
+              <div class="price">Rp 6.500</div>
+            </div>
+            <div class="muted" style="margin-top:6px">Rating: 4.9 • ETA 3 menit</div>
+          </div>
+          <div>
+            <button class="btn" onclick="selectDriver(3)">Pilih</button>
+          </div>
+        </div></div>
+
+        <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+          <button class="btn" id="confirmBtn" disabled="">Konfirmasi Order</button>
+          <div class="muted" id="selectedInfo">Driver: -</div>
+        </div>
+
+        <footer>
+          <div>Pembayaran: <strong>Tunai / QRIS</strong></div>
+          <div style="margin-top:6px">Rating &amp; feedback disimpan untuk evaluasi.</div>
+        </footer>
+      </section>
+
+      <aside class="card">
+        <h2>Chat &amp; Konfirmasi</h2>
+        <div class="chat">
+          <div class="messages" id="messages">
+            <div class="msg">Sistem: Selamat datang di EduRide demo.</div>
+          <div class="msg ">Sistem: Driver terdekat ditampilkan. Silakan pilih driver.</div><div class="msg ">User: Memesan layanan ke Nuzil.</div><div class="msg ">Driver Nuzil: Siap menjemput dalam 3 menit.</div></div>
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <input id="msgInput" type="text" placeholder="Ketik pesan ke driver / admin">
+            <button class="btn" id="sendMsg">Kirim</button>
+          </div>
+        </div>
+
+        <hr style="margin:12px 0;border:none;border-top:1px solid #eef3f7">
+
+        <h2 style="font-size:16px">Ringkasan Pesanan</h2>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+          <div><strong>Jemput:</strong> <span id="sumPickup">Pintu Utama</span></div>
+          <div><strong>Tujuan:</strong> <span id="sumDrop">Perpustakaan</span></div>
+          <div><strong>Driver:</strong> <span id="sumDriver">Nuzil (Fakultas Keguruan dan Ilmu Pendidikan)</span></div>
+          <div><strong>Estimasi Harga:</strong> <span id="sumPrice">Rp 6.500</span></div>
+        </div>
+
+        <hr style="margin:12px 0;border:none;border-top:1px solid #eef3f7">
+        <h2 style="font-size:16px">Riwayat (Demo)</h2>
+        <div id="history" class="muted"><div style="margin-bottom:8px"><strong>#1</strong> 6/10/2025, 21.06.41 — Nuzil — Rp 6.500<br><span class="muted">Pintu Utama → Perpustakaan</span></div></div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const drivers = [
+      {id:1,name:'Faiq',faculty:'Fakultas Keguruan dan Ilmu Pendidikan',rating:4.8,eta:4,price:6000},
+      {id:2,name:'Nadila',faculty:'Fakultas Keguruan dan Ilmu Pendidikan',rating:4.7,eta:6,price:7000},
+      {id:3,name:'Nuzil',faculty:'Fakultas Keguruan dan Ilmu Pendidikan',rating:4.9,eta:3,price:6500}
+    ];
+
+    const driversEl = document.getElementById('drivers');
+    const messagesEl = document.getElementById('messages');
+    const pickupEl = document.getElementById('pickup');
+    const dropEl = document.getElementById('drop');
+    const noteEl = document.getElementById('note');
+    const findBtn = document.getElementById('findDriver');
+    const etaEl = document.getElementById('eta');
+    const confirmBtn = document.getElementById('confirmBtn');
+    const selectedInfo = document.getElementById('selectedInfo');
+    const sumPickup = document.getElementById('sumPickup');
+    const sumDrop = document.getElementById('sumDrop');
+    const sumDriver = document.getElementById('sumDriver');
+    const sumPrice = document.getElementById('sumPrice');
+    const historyEl = document.getElementById('history');
+
+    let selectedDriver = null;
+    let history = [];
+
+    function renderDrivers(list){
+      driversEl.innerHTML = '';
+      list.forEach(d=>{
+        const el = document.createElement('div');
+        el.className = 'driver';
+        el.innerHTML = `
+          <div class="avatar">${d.name.charAt(0)}</div>
+          <div class="meta">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-weight:700">${d.name} <span style='font-weight:400;color:#64748b;font-size:13px'>(${d.faculty})</span></div>
+              <div class="price">Rp ${d.price.toLocaleString()}</div>
+            </div>
+            <div class="muted" style="margin-top:6px">Rating: ${d.rating} • ETA ${d.eta} menit</div>
+          </div>
+          <div>
+            <button class="btn" onclick="selectDriver(${d.id})">Pilih</button>
+          </div>
+        `;
+        driversEl.appendChild(el);
+      });
+    }
+
+    function selectDriver(id){
+      selectedDriver = drivers.find(x=>x.id===id);
+      selectedInfo.textContent = `Driver: ${selectedDriver.name} (${selectedDriver.faculty})`;
+      confirmBtn.disabled = false;
+      sumDriver.textContent = selectedDriver.name + ' ('+selectedDriver.faculty+')';
+      sumPrice.textContent = 'Rp ' + selectedDriver.price.toLocaleString();
+    }
+
+    window.selectDriver = selectDriver;
+
+    findBtn.addEventListener('click', ()=>{
+      const type = document.getElementById('type').value;
+      const eta = Math.min(...drivers.map(d=>d.eta)) + 2;
+      etaEl.textContent = 'ETA: sekitar ' + eta + ' menit';
+      renderDrivers(drivers);
+      logMessage('Sistem: Driver terdekat ditampilkan. Silakan pilih driver.');
+    });
+
+    confirmBtn.addEventListener('click', ()=>{
+      if(!selectedDriver){alert('Pilih driver dulu.');return}
+      const order = {
+        pickup: pickupEl.value,
+        drop: dropEl.value,
+        note: noteEl.value,
+        driver: selectedDriver.name,
+        price: selectedDriver.price,
+        time: new Date().toLocaleString()
+      };
+      history.push(order);
+      historyEl.innerHTML = history.map((h,i)=>`<div style='margin-bottom:8px'><strong>#${i+1}</strong> ${h.time} — ${h.driver} — Rp ${h.price.toLocaleString()}<br/><span class='muted'>${h.pickup} → ${h.drop}</span></div>`).join('');
+      sumPickup.textContent = order.pickup;
+      sumDrop.textContent = order.drop;
+      logMessage(`User: Memesan layanan ke ${order.driver}.`);
+      logMessage(`Driver ${order.driver}: Siap menjemput dalam ${selectedDriver.eta} menit.`);
+      confirmBtn.disabled = true;
+      selectedInfo.textContent = 'Driver: -';
+      selectedDriver = null;
+    });
+
+    function logMessage(text, who='system'){
+      const el = document.createElement('div');
+      el.className = 'msg ' + (who==='me'?'me':'');
+      el.textContent = text;
+      messagesEl.appendChild(el);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    document.getElementById('sendMsg').addEventListener('click', ()=>{
+      const t = document.getElementById('msgInput').value.trim();
+      if(!t) return;
+      logMessage('You: ' + t, 'me');
+      document.getElementById('msgInput').value = '';
+      setTimeout(()=>{
+        logMessage('Admin: Pesan diterima. Kami akan sampaikan ke driver.');
+      },800);
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', ()=>{
+      const blob = new Blob([document.documentElement.outerHTML], {type:'text/html'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'EduRide_prototype.html';
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    renderDrivers(drivers.slice(0,2));
+  </script>
+
+</body></html>
